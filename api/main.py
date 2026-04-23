@@ -28,7 +28,10 @@ app.include_router(markets.router, prefix="/api/markets", tags=["markets"])
 app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
 app.include_router(portfolio.router, prefix="/api/portfolio", tags=["portfolio"])
 
-app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+_static_dir = BASE_DIR / "static"
+if _static_dir.is_dir():
+    app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")
+
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates" / "terminal"))
 
 
