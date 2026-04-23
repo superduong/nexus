@@ -1,6 +1,7 @@
 import asyncio
 import random
 import time
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
@@ -8,12 +9,21 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from api.core.bootstrap import seed_admin_if_configured
 from api.core.config import get_settings
 from api.routers import auth, markets, orders, portfolio
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 settings = get_settings()
-app = FastAPI(title="Nexus API", version="1.0.0")
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    seed_admin_if_configured()
+    yield
+
+
+app = FastAPI(title="Nexus API", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

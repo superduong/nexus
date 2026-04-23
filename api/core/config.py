@@ -42,6 +42,12 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60
     refresh_token_expire_days: int = 7
 
+    # Khi true: nếu chưa có user nào, tạo admin lần đầu (Render / DB mới). Tắt sau khi đã có tài khoản nếu muốn.
+    seed_admin_on_empty_db: bool = False
+    seed_admin_email: str = "admin@nexus.com"
+    seed_admin_username: str = "admin"
+    seed_admin_password: str = "admin1234"
+
     @model_validator(mode="after")
     def celery_defaults(self):
         object.__setattr__(self, "database_url", _resolve_sqlite(self.database_url))
