@@ -22,7 +22,7 @@ services:
     plan: free
     dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health/
-    preDeployCommand: alembic upgrade head
+    # Free tier: không dùng được preDeployCommand — migrate DB xem Dockerfile (alembic trước uvicorn)
     envVars:
       - key: PYTHONUNBUFFERED
         value: "1"
